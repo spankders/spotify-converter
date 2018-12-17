@@ -15,3 +15,6 @@ php spotify.php # choose your option!
 ```
 ## Screenshot
 ![Screen Shot](https://raw.githubusercontent.com/ardzz/spotify-converter/master/screenshot/Screenshot%20from%202018-12-17%2016-44-39.png)
+![Screen Shot](https://raw.githubusercontent.com/ardzz/spotify-converter/master/screenshot/Screenshot%20from%202018-12-17%2019-15-35.png)
+![Screen Shot](https://raw.githubusercontent.com/ardzz/spotify-converter/master/screenshot/Screenshot%20from%202018-12-17%2019-16-53.png)
+![Screen Shot](https://raw.githubusercontent.com/ardzz/spotify-converter/master/screenshot/Screenshot%20from%202018-12-17%2019-16-59.png)
