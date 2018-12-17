@@ -236,9 +236,40 @@ class spotify{
 			return $string;
 		}
 	}
-	function get_playlist($cookie, $id_playlist){
+	/*function get_playlist($cookie, $id_playlist){
 		$id_playlist = self::get_id($id_playlist);
 		$access_token = self::get_access_token($cookie);
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://api.spotify.com/v1/playlists/{$id_playlist}");
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($ch, CURLOPT_HEADER, 1);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.62 Safari/537.36',
+				"authorization: Bearer {$access_token}",
+				));
+			$res = curl_exec($ch);
+			$header = substr($res, 0, curl_getinfo($ch, CURLINFO_HEADER_SIZE));
+			$body = substr($res, curl_getinfo($ch, CURLINFO_HEADER_SIZE));
+			$info = curl_getinfo($ch);
+			curl_close($ch);
+			if ($info["http_code"] == "200") {
+				$nama_file = json_decode($body,1)["name"].".js";
+				if (!file_exists($nama_file)) {
+					file_put_contents($nama_file, $body);
+					return json_decode($body,1);
+				}else{
+					return json_decode($body,1);
+				}
+			}
+			else{
+				return false;
+			}
+	}*/
+	function get_playlist($cookie, $id_playlist, $csrf){
+		$id_playlist = self::get_id($id_playlist);
+		$access_token = self::get_access_token($cookie, $csrf);
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, "https://api.spotify.com/v1/playlists/{$id_playlist}");
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
