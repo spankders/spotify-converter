@@ -102,7 +102,7 @@ class spotify{
 		$csrf_token = self::get_string($header, "csrf_token=",";");
 		return $csrf_token;
 	}
-	function login($email, $password){
+	/*function login($email, $password){
 		$csrf = self::get_csrf();
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_URL, "https://accounts.spotify.com/api/login");
@@ -149,6 +149,67 @@ class spotify{
 		$header = substr($res, 0, curl_getinfo($ch, CURLINFO_HEADER_SIZE));
 		$body = substr($res, curl_getinfo($ch, CURLINFO_HEADER_SIZE));
 		curl_close($ch);
+		if (preg_match('/access_token/i', $header)) {
+			$output = self::get_string($header, "#access_token=", "&");
+			return $output;
+		}
+		elseif (empty($header) && empty($body)) {
+			return false;
+		}
+		else{
+			return false;
+		}
+		//return ["header" => $header, "body" => $body];
+	}*/
+	function login($email, $password){
+		$csrf = self::get_csrf();
+		$c = curl_init();
+		curl_setopt($c, CURLOPT_URL, "https://accounts.spotify.com/api/login");
+		curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($c, CURLOPT_HEADER, 1);
+		curl_setopt($c, CURLOPT_HTTPHEADER, array(
+			"User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.62 Safari/537.36",
+			"Cookie: csrf_token={$csrf}; __bon=MHwwfDExMDc5NjU4MDR8NDY1MzQ1NjM3Njh8MXwxfDF8MQ==; fb_continue=https%3A%2F%2Fwww.spotify.com%2Fid%2Faccount%2Foverview%2F; remember={$email}"
+			));
+		$param = "remember=true&username={$email}&password={$password}&captcha_token=&csrf_token=".$csrf;
+		curl_setopt($c, CURLOPT_POSTFIELDS, $param);
+		curl_setopt($c, CURLOPT_POST, 1);
+		$res = curl_exec($c);
+		$header = substr($res, 0, curl_getinfo($c, CURLINFO_HEADER_SIZE));
+		$body = substr($res, curl_getinfo($c, CURLINFO_HEADER_SIZE));
+		$info = curl_getinfo($c);
+		curl_close($c);
+		if ($info["http_code"] == "200") {
+			return [
+			"cookie" => "sp_dc=".self::get_string($header, "Set-Cookie: sp_dc=", ";").";",
+			"csrf" => $csrf,
+			"body" => $body];
+		}
+		else{
+			return false;
+		}
+	}
+	function get_access_token($cookie, $csrf){
+		$c = curl_init();
+		curl_setopt($c, CURLOPT_URL, "https://accounts.spotify.com/authorize/accept");
+		curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($c, CURLOPT_HEADER, 1);
+		curl_setopt($c, CURLOPT_HTTPHEADER, array(
+			"User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.62 Safari/537.36",
+			"Cookie: csrf_token={$csrf}; {$cookie};",
+			));
+		$param = "response_type=token&redirect_uri=https%3A%2F%2Fdeveloper.spotify.com%2Fcallback&client_id=774b29d4f13844c495f206cafdad9c86&scope=user-read-private+user-read-email+user-library-read+user-top-read+playlist-modify-public+user-read-playback-state+user-follow-read+user-modify-playback-state+user-read-recently-played+user-read-currently-playing+user-follow-modify+playlist-modify-private+playlist-read-collaborative+user-library-modify+playlist-read-private+user-read-birthdate&csrf_token=".$csrf;
+		curl_setopt($c, CURLOPT_POSTFIELDS, $param);
+		curl_setopt($c, CURLOPT_POST, 1);
+		$res = curl_exec($c);
+		$header = substr($res, 0, curl_getinfo($c, CURLINFO_HEADER_SIZE));
+		$body = substr($res, curl_getinfo($c, CURLINFO_HEADER_SIZE));
+		$info = curl_getinfo($c);
+		curl_close($c);
 		if (preg_match('/access_token/i', $header)) {
 			$output = self::get_string($header, "#access_token=", "&");
 			return $output;
