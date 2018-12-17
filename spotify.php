@@ -33,7 +33,8 @@ menu:
 echo $text_spotify::show_menu();
 $input_opsi = readline("   [*] Option Input : ");
 if ($input_opsi < 6) {
-	$cookie = $spotify::login($email, $password)["cookie"];
+	$login = $spotify::login($email, $password);
+	$cookie = $login["cookie"];
 	if ($spotify::email_exists($email) == "true") {
 		echo PHP_EOL;
 		echo "   {$red}[!] Can't Login!{$normal}".PHP_EOL;
@@ -54,7 +55,7 @@ if ($input_opsi < 6) {
 if ($input_opsi == 1) {
 	$text_spotify->loading($normal);
 	echo PHP_EOL;
-	$access_token = $spotify::get_access_token($cookie);
+	$access_token = $spotify::get_access_token($cookie, $login["csrf"]);
 	if ($access_token) {
 		if (file_exists("access_token.txt")) {
 			echo "   {$red}[!] access_token.txt file is already exists{$normal}".PHP_EOL;
@@ -93,7 +94,7 @@ elseif ($input_opsi == 2) {
 	}
 	$text_spotify->loading($normal);
 	echo PHP_EOL;
-	$playlist = $spotify::get_playlist($cookie, $input);
+	$playlist = $spotify::get_playlist($cookie, $input, $login["csrf"]);
 	if ($playlist) {
 		echo "   [*] Saved to ".$cyan.$playlist["name"].".js{$normal}".PHP_EOL;
 		echo $finish;
@@ -110,7 +111,7 @@ elseif ($input_opsi == 3) {
 	}
 	$text_spotify->loading($normal);
 	echo PHP_EOL;
-	$playlist = $spotify::get_playlist($cookie, $input);
+	$playlist = $spotify::get_playlist($cookie, $input, $login["csrf"]);
 	if($playlist){
 		echo "   [*] Playlist Name : ".$playlist["name"].PHP_EOL;
 		echo "   [*] Description   : ".$playlist["description"].PHP_EOL.PHP_EOL;
@@ -134,7 +135,7 @@ elseif ($input_opsi == 4) {
 	}
 	$text_spotify->loading($normal);
 	echo PHP_EOL;
-	$playlist = $spotify::get_playlist($cookie, $input);
+	$playlist = $spotify::get_playlist($cookie, $input, $login["csrf"]);
 	if($playlist){
 		echo "   [*] Playlist Name : ".$playlist["name"].PHP_EOL;
 		echo "   [*] Description   : ".$playlist["description"].PHP_EOL.PHP_EOL;
@@ -163,7 +164,7 @@ elseif ($input_opsi == 5) {
 	}
 	$text_spotify->loading($normal);
 	echo PHP_EOL;
-	$playlist = $spotify::get_playlist($cookie, $input);
+	$playlist = $spotify::get_playlist($cookie, $input, $login["csrf"]);
 	if($playlist){
 		echo "   [*] Playlist Name : ".$playlist["name"].PHP_EOL;
 		echo "   [*] Description   : ".$playlist["description"].PHP_EOL.PHP_EOL;
