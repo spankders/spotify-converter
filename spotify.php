@@ -199,7 +199,7 @@ elseif ($input_opsi == 5) {
 				$path = getcwd()."/".$playlist["name"];
 				$title = str_replace("/"," - ", $vid_info["video_title"])." [ SPOTIFY CONVERTER - Ardzz ].mp3";
 				if ($spotify::download($convert_to_mp3["url_download"], $path."/".$title)) {
-					echo "   {$green1}[*] Successfully downloaded the file and saved it at {$red}\"".$cyan.$playlist["name"]."/".$title.$normal.$red."\"".$normal.PHP_EOL;
+					echo "   {$green1}[*] Successfully downloaded the file and saved it at {$red}\"".$cyan.$title.$normal.$red."\"".$normal.PHP_EOL;
 				}else{
 					echo "  {$red}[!] Failed to download file{$normal}".PHP_EOL;
 				}
